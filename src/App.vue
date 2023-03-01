@@ -67,7 +67,7 @@
 <script setup>
 //import
 import {ref, onMounted} from 'vue';
-import { collection, onSnapshot, addDoc, doc, deleteDoc } from "firebase/firestore";
+import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from '@/firebase';
 
 //firebase ref
@@ -117,7 +117,9 @@ const deleteTodo = (id)=>{
 
 const togglerDone = (id)=>{
     const index = todos.value.findIndex(todo => todo.id === id)
-    todos.value[index].done = !todos.value[index].done
+    updateDoc(doc(todoCollectionRef, id), {
+    done: !todos.value[index].done
+});
 }
 
 //edit list
@@ -126,7 +128,6 @@ const editing = ref(false)
 const doEdit = (e)=>{
     editing.value = e
     newtodoContent.value = ""
-
 }
 </script>
 
