@@ -1,12 +1,8 @@
 <template>
     <div class="wrapper-todo">
-
         <div class="columns is-mobile">
             <div class="column is-half">
                 <div class="title has-text-weight-semibold has-text-white">My Todo List</div>
-            </div>
-            <div class="column">
-               
             </div>
             <div class="column is-flex is-justify-content-end">
                 <div class="list-lenght">
@@ -16,15 +12,12 @@
         </div>
 
         <div class="is-flex is-justify-content-center mb-6">
-             <span class="icon has-text-white fa-2x"  v-if="editing">
-                    <i class="fa-regular fa-rectangle-xmark" @click="doEdit(false)"></i>
-                </span>
-                <span class="icon has-text-white fa-2x" v-else>
-                    <i class="fa-regular fa-pen-to-square" @click="doEdit(true)"></i>
-                </span> 
-           
-            
-           
+            <span class="icon has-text-white fa-2x"  v-if="editing">
+                <i class="fa-regular fa-rectangle-xmark" @click="doEdit(false)"></i>
+            </span>
+            <span class="icon has-text-white fa-2x" v-else>
+                <i class="fa-regular fa-pen-to-square" @click="doEdit(true)"></i>
+            </span> 
         </div>
         
         
@@ -73,12 +66,32 @@
 
 <script setup>
 //import
-import {ref} from 'vue';
+import {ref, onMounted} from 'vue';
 import { v4 as uuidv4 } from 'uuid';
+import { collection, getDocs } from "firebase/firestore";
+import { db } from '@/firebase';
 
 //todos
 
 const todos = ref([]);
+
+//get todos
+
+onMounted(async()=>{
+    const querySnapshot = await getDocs(collection(db, "todos"));
+    let fbTodos = [];
+    querySnapshot.forEach((doc) => {
+    console.log(doc.id, " => ", doc.data());
+    const todo = {
+        id: doc.id,
+        content: doc.data().content,
+        done: doc.data().done
+    };
+    fbTodos.push(todo);
+    });
+    todos.value = fbTodos;
+})
+
 
 //add todo
 
