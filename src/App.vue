@@ -1,7 +1,17 @@
 <template>
 <div class="wrapper-todo">
-    <div class="title has-text-centered has-text-weight-semibold has-text-primary-dark">My Todo List</div>
-    <div>{{todos.length}}</div>
+    <div class="columns is-mobile">
+        <div class="column ">
+            <div class="title has-text-weight-semibold has-text-white">My Todo List</div>
+        </div>
+    <div class="column is-flex is-justify-content-end">
+        <div class="list-lenght">
+            <p>{{todos.length}}</p>
+        </div>  
+  </div>
+</div>
+    
+    
     <form @submit.prevent="addTodo">
          <div class="field is-grouped mb-5">
         <p class="control is-expanded">
@@ -17,14 +27,14 @@
     </div>
     </form>
     <div v-for="todo in todos" :key="todo.id"
-    class="card mb-5" :class="{'has-background-success-light' : todo.done}">
+    class="card mb-5 card-background-border" :class="{'done-border' : todo.done}">
         <div class="card-content">
             <div class="content">
                  <div class="columns is-mobile is-vcentered">
-                    <div class="column" :class="{'has-text-success line-through' : todo.done}">{{todo.content}}</div>
+                    <div class="column has-text-white" :class="{'has-text-success line-through' : todo.done}">{{todo.content}}</div>
                     <div class="column is-5 has-text-right">
                         <button class="button has-text-white mr-2"
-                        :class="todo.done ? 'is-success' : 'is-light'" @click="togglerDone(todo.id)">&check;</button>
+                        :class="todo.done ? 'is-primary' : 'is-light'" @click="togglerDone(todo.id)">&check;</button>
                         <button class="button has-background-danger has-text-white" @click="deleteTodo(todo.id)">&cross;</button>    
                     </div>
                 </div>
@@ -52,11 +62,11 @@ const todos = ref([
     //     content: 'Youre excused',
     //     done: false    
     // },
-    {
-        id:'id3',
-        content: 'And Im not your brah',
-        done: true    
-    }
+    // {
+    //     id:'id3',
+    //     content: 'And Im not your brah',
+    //     done: true    
+    // }
 ]);
 
 //add todo
@@ -93,11 +103,39 @@ const togglerDone = (id)=>{
 
 .wrapper-todo{
     padding: 20px;
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
 }
 
 .line-through{
     text-decoration: line-through;
 }
+
+
+.card-background-border{
+    box-shadow: 
+        0 0 1rem hsl(348, 86%, 43%),
+        0 0 1rem hsl(348, 86%, 43%),
+        0 0 1rem hsl(348, 86%, 43%);
+    background-color: rgb(1, 1, 26);
+}
+
+.done-border{
+    box-shadow: 
+        0 0 0.8rem hsl(171, 100%, 29%),
+        0 0 1rem hsl(171, 100%, 29%),
+        0 0 1rem hsl(171, 100%, 29%); 
+}
+
+.list-lenght{
+    color: #fff;
+    border: 2px solid ;
+    border-radius: 50%;
+    width: 3em;
+    height: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 </style>
