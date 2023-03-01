@@ -67,9 +67,12 @@
 <script setup>
 //import
 import {ref, onMounted} from 'vue';
-import { v4 as uuidv4 } from 'uuid';
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, addDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from '@/firebase';
+
+//firebase ref
+
+const todoCollectionRef = collection(db, "todos")
 
 //todos
 
@@ -78,7 +81,7 @@ const todos = ref([]);
 //get todos
 
 onMounted(()=>{
-    onSnapshot(collection(db, "todos"), (querySnapshot) => {
+    onSnapshot(todoCollectionRef, (querySnapshot) => {
     const fbTodos = [];
     querySnapshot.forEach((doc) => {
     const todo = {
@@ -92,24 +95,22 @@ onMounted(()=>{
 });
 })
 
-
 //add todo
 
 const newtodoContent = ref('')
 
 const addTodo = ()=>{
-    const newTodo = {
-        id: uuidv4(),
-        content: newtodoContent.value,
-        done: false 
-    }
-    todos.value.unshift(newTodo)
+    addDoc(todoCollectionRef, {
+    content: newtodoContent.value,
+    done: false
+    });
     newtodoContent.value =""
 }
+
 //delete todo
 
 const deleteTodo = (id)=>{
-    todos.value = todos.value.filter((todo)=> todo.id!==id)
+    deleteDoc(doc(todoCollectionRef, id));
 }
 
 //todo done
@@ -132,7 +133,6 @@ const doEdit = (e)=>{
 
 <style>
 @import 'bulma/css/bulma.min.css';
-
 
 .wrapper-todo{
     padding: 20px;
