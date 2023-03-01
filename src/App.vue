@@ -1,6 +1,7 @@
 <template>
 <div class="wrapper-todo">
     <div class="title has-text-centered has-text-weight-semibold has-text-primary-dark">My Todo List</div>
+    <div>{{todos.length}}</div>
     <form @submit.prevent="addTodo">
          <div class="field is-grouped mb-5">
         <p class="control is-expanded">
@@ -23,7 +24,7 @@
                     <div class="column">{{todo.content}}</div>
                     <div class="column is-5 has-text-right">
                         <button class="button has-background-success has-text-white mr-2">&check;</button>
-                        <button class="button has-background-danger has-text-white">&cross;</button>    
+                        <button class="button has-background-danger has-text-white" @click="deleteTodo(todo.id)">&cross;</button>    
                     </div>
                 </div>
             </div>
@@ -38,6 +39,7 @@ import {ref} from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 
 //todos
+
 const todos = ref([
     // {
     //     id:'id1',
@@ -68,6 +70,10 @@ const addTodo = ()=>{
     }
     todos.value.unshift(newTodo)
     newtodoContent.value =""
+}
+
+const deleteTodo = (id)=>{
+    todos.value = todos.value.filter((todo)=> todo.id!==id)
 }
 
 </script>
