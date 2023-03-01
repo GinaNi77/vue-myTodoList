@@ -1,47 +1,74 @@
 <template>
-<div class="wrapper-todo">
-    <div class="columns is-mobile">
-        <div class="column ">
-            <div class="title has-text-weight-semibold has-text-white">My Todo List</div>
+    <div class="wrapper-todo">
+
+        <div class="columns is-mobile">
+            <div class="column is-half">
+                <div class="title has-text-weight-semibold has-text-white">My Todo List</div>
+            </div>
+            <div class="column">
+               
+            </div>
+            <div class="column is-flex is-justify-content-end">
+                <div class="list-lenght">
+                    <p>{{todos.length}}</p>
+                </div>  
+            </div>
         </div>
-    <div class="column is-flex is-justify-content-end">
-        <div class="list-lenght">
-            <p>{{todos.length}}</p>
-        </div>  
-  </div>
-</div>
-    
-    
-    <form @submit.prevent="addTodo">
-         <div class="field is-grouped mb-5">
-        <p class="control is-expanded">
-            <input class="input" 
-            type="text" 
-            placeholder="Add a todo" 
-            v-model="newtodoContent">
-        </p>
-        <p class="control">
-            <button class="button is-info has-background-primary"
-            :disabled="!newtodoContent">Add</button>
-        </p>
-    </div>
-    </form>
-    <div v-for="todo in todos" :key="todo.id"
-    class="card mb-5 card-background-border" :class="{'done-border' : todo.done}">
-        <div class="card-content">
-            <div class="content">
-                 <div class="columns is-mobile is-vcentered">
-                    <div class="column has-text-white" :class="{'has-text-success line-through' : todo.done}">{{todo.content}}</div>
-                    <div class="column is-5 has-text-right">
-                        <button class="button has-text-white mr-2"
-                        :class="todo.done ? 'is-primary' : 'is-light'" @click="togglerDone(todo.id)">&check;</button>
-                        <button class="button has-background-danger has-text-white" @click="deleteTodo(todo.id)">&cross;</button>    
+
+        <div class="is-flex is-justify-content-center mb-6">
+             <span class="icon has-text-white fa-2x"  v-if="editing">
+                    <i class="fa-regular fa-rectangle-xmark" @click="doEdit(false)"></i>
+                </span>
+                <span class="icon has-text-white fa-2x" v-else>
+                    <i class="fa-regular fa-pen-to-square" @click="doEdit(true)"></i>
+                </span> 
+           
+            
+           
+        </div>
+        
+        
+        <form @submit.prevent="addTodo" v-if:="editing">
+            <div class="field is-grouped mb-5">
+                <p class="control is-expanded">
+                    <input class="input" 
+                    type="text" 
+                    placeholder="Add a todo" 
+                    v-model="newtodoContent">
+                </p>
+                <p class="control">
+                    <button class="button is-info has-background-primary"
+                    :disabled="!newtodoContent">Add</button>
+                </p>
+            </div>
+        </form>
+       
+        <div v-for="todo in todos"
+        :key="todo.id"
+        class="card mb-5 card-background-border"
+        :class="{'done-border' : todo.done}">
+            <div class="card-content">
+                <div class="content">
+                    <div class="columns is-mobile is-vcentered">
+                        
+                        <div class="column has-text-white"
+                        :class="{'has-text-success line-through' : todo.done}">{{todo.content}}</div>
+                        <div class="column is-5 has-text-right">
+                            <button class="button has-text-white mr-2"
+                            :class="todo.done ? 'is-primary' : 'is-light'"
+                            @click="togglerDone(todo.id)">&check;
+                            </button>
+                            
+                            <button class="button has-background-danger has-text-white"
+                            @click="deleteTodo(todo.id)">&cross;
+                            </button>    
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        
     </div>
-</div>
 </template>
 
 <script setup>
@@ -51,23 +78,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 //todos
 
-const todos = ref([
-    // {
-    //     id:'id1',
-    //     content: 'Excuse me, brah',
-    //     done: false    
-    // },
-    // {
-    //     id:'id2',
-    //     content: 'Youre excused',
-    //     done: false    
-    // },
-    // {
-    //     id:'id3',
-    //     content: 'And Im not your brah',
-    //     done: true    
-    // }
-]);
+const todos = ref([]);
 
 //add todo
 
@@ -94,6 +105,15 @@ const togglerDone = (id)=>{
     const index = todos.value.findIndex(todo => todo.id === id)
     todos.value[index].done = !todos.value[index].done
 }
+
+//edit list
+const editing = ref(false)
+
+const doEdit = (e)=>{
+    editing.value = e
+    newtodoContent.value = ""
+
+}
 </script>
 
 
@@ -110,7 +130,6 @@ const togglerDone = (id)=>{
 .line-through{
     text-decoration: line-through;
 }
-
 
 .card-background-border{
     box-shadow: 
@@ -137,5 +156,4 @@ const togglerDone = (id)=>{
     justify-content: center;
     align-items: center;
 }
-
 </style>
